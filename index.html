@@ -254,9 +254,14 @@
             .btn { width: 100%; }
 
             /* === CSS PERBAIKAN UNTUK TABEL MOBILE (START) === */
+
+            /* === KODE YANG DIUBAH (START) === */
             .table-container {
-                overflow-x: hidden; /* Hilangkan scroll horizontal di mobile */
+                /* Menambahkan tinggi maksimum dan scrollbar vertikal pada format kartu */
+                max-height: 500px; /* Anda bisa sesuaikan nilai ini */
+                overflow-y: auto;
             }
+            /* === KODE YANG DIUBAH (END) === */
 
             table {
                 min-width: 100%;
