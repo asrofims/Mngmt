@@ -1,1 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFSUNMEDIA BOOKING FORM List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === MODERN THEME STYLING === */
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #6b7280;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --light-color: #f9fafb;
+            --dark-color: #111827;
+            --body-bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --font-family: 'Poppins', sans-serif;
+            --border-radius: 0.5rem;
+            --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: var(--font-family);
+            background-color: var(--body-bg);
+            color: var(--dark-color);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            font-weight: 600;
+        }
+
+        h1 {
+            color: var(--dark-color);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2.25rem;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: var(--font-family);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-secondary { background-color: var(--secondary-color); color: white; }
+        .btn-edit { background-color: var(--warning-color); color: var(--dark-color); }
+        .btn-delete { background-color: var(--danger-color); color: white; }
+        
+        /* Table Styling with Scroll Bar */
+        .table-container {
+            overflow-x: auto; /* This creates the horizontal scroll bar */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* Minimum width before scrollbar appears */
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        thead th {
+            background-color: var(--light-color);
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: var(--light-color);
+        }
+        
+        .actions-cell {
+            white-space: nowrap;
+        }
+        
+        .actions-cell .btn {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+
+        .empty-data-cell {
+            text-align: center;
+            padding: 3rem 1rem !important;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            background-color: var(--light-color) !important;
+        }
+        
+        /* Status Badges */
+        .badge {
+            padding: 0.25em 0.75em;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-radius: 9999px; /* Pill shape */
+        }
+
+        .badge-progress { background-color: #dbeafe; color: #1e40af; }
+        .badge-done { background-color: #d1fae5; color: #065f46; }
+        .badge-cancel { background-color: #e5e7eb; color: #374151; }
+        .badge-paid { background-color: #d1fae5; color: #065f46; }
+        .badge-dp { background-color: #fef3c7; color: #92400e; }
+        .badge-unpaid { background-color: #fee2e2; color: #991b1b; }
+
+        /* Loader */
+        #loader {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .card { padding: 1.5rem; }
+            h1 { font-size: 1.8rem; }
+            .form-actions { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>AFSUNMEDIA BOOKING FORM</h1>
+
+        <div class="card">
+            <h2 id="formTitle">Tambah Booking Baru</h2>
+            <form id="bookingForm">
+                <input type="hidden" id="rowId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nama">Nama Client</label>
+                        <input type="text" id="nama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggalAcara">Tanggal Acara</label>
+                        <input type="date" id="tanggalAcara" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenisLayanan">Jenis Layanan</label>
+                        <select id="jenisLayanan" required>
+                            <option value="Foto">Foto</option>
+                            <option value="Video">Video</option>
+                            <option value="Foto/Video">Foto/Video</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="acara">Acara</label>
+                        <select id="acara" required>
+                            <option value="Graduation">Graduation</option>
+                            <option value="Prewedding">Prewedding</option>
+                            <option value="Engagement">Engagement</option>
+                            <option value="Akad">Akad</option>
+                            <option value="Wedding">Wedding</option>
+                            <option value="Tedak Siten">Tedak Siten</option>
+                            <option value="Lain-Lain">Lain-Lain</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectStatus">Project Status</label>
+                        <select id="projectStatus" required>
+                            <option value="On Progress">On Progress</option>
+                            <option value="Done">Done</option>
+                            <option value="Cancel">Cancel</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentStatus">Payment Status</label>
+                        <select id="paymentStatus" required>
+                            <option value="Lunas">Lunas</option>
+                            <option value="DP">DP</option>
+                            <option value="Belum Terbayar">Belum Terbayar</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="note">Note</label>
+                        <textarea id="note"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Batal</button>
+                    <button type="submit" id="submitButton" class="btn btn-primary">Simpan Booking</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Daftar Booking</h2>
+
+            <div style="margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <button id="sortNearestBtn" class="btn btn-secondary" style="font-weight: 500;">
+                    Urutkan: Tanggal Terdekat
+                </button>
+                <button id="sortLatestBtn" class="btn btn-secondary" style="font-weight: 500;">
+                    Urutkan: Terbaru Ditambahkan
+                </button>
+            </div>
+
+            <div id="loader">Memuat data...</div>
+            <div class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Tanggal Acara</th>
+                            <th>Layanan</th>
+                            <th>Acara</th>
+                            <th>Project</th>
+                            <th>Pembayaran</th>
+                            <th>Note</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingList">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let originalBookings = []; // Menyimpan data asli dari server
+        let displayedBookings = []; // Menyimpan data yang akan ditampilkan & diurutkan
+
+        // ===================================================================================
+        // PASTE WEB APP URL DARI GOOGLE APPS SCRIPT ANDA DI SINI
+        // ===================================================================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPwL-vov8a1bRrTV3tLr7NGqqFpVLtYNkZdbVPRQ1hZKw9c-1xqJQAHgiZMqzDFqAb/exec';
+        // ===================================================================================
+
+        const form = document.getElementById('bookingForm');
+        const loader = document.getElementById('loader');
+        const bookingListBody = document.getElementById('bookingList');
+        const formTitle = document.getElementById('formTitle');
+        const submitButton = document.getElementById('submitButton');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (SCRIPT_URL === 'PASTE_URL_ANDA_DI_SINI') {
+                alert('PENTING: Harap edit file HTML dan masukkan URL Web App Anda pada variabel SCRIPT_URL.');
+                bookingListBody.innerHTML = `<tr><td colspan="8" class="empty-data-cell">Konfigurasi belum selesai. Masukkan URL Web App Anda.</td></tr>`;
+                return;
+            }
+            loadBookings();
+            form.addEventListener('submit', handleFormSubmit);
+
+            // Menambahkan event listener untuk setiap tombol sort
+            document.getElementById('sortNearestBtn').addEventListener('click', sortNearestDate);
+            document.getElementById('sortLatestBtn').addEventListener('click', sortLatestAdded);
+        });
+
+        function showLoader() {
+            loader.style.display = 'block';
+            document.querySelector('.table-container').style.display = 'none';
+        }
+
+        function hideLoader() {
+            loader.style.display = 'none';
+            document.querySelector('.table-container').style.display = 'block';
+        }
+
+        async function loadBookings() {
+            showLoader();
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                
+                originalBookings = data; // Simpan data asli
+                displayedBookings = [...data]; // Buat salinan untuk ditampilkan
+                
+                renderTable(displayedBookings); // Render data awal tanpa diurutkan
+
+            } catch (error) {
+                console.error('Gagal memuat data:', error);
+                bookingListBody.innerHTML = `<tr><td colspan="8" class="empty-data-cell">Gagal memuat data. Periksa koneksi atau pengaturan script (F12 untuk lihat Console).</td></tr>`;
+            } finally {
+                hideLoader();
+            }
+        }
+        
+        // Fungsi untuk mengurutkan berdasarkan TANGGAL TERDEKAT
+        function sortNearestDate() {
+            displayedBookings.sort((a, b) => new Date(a[2]) - new Date(b[2]));
+            renderTable(displayedBookings);
+        }
+
+        // Fungsi untuk mengurutkan berdasarkan TERBARU DITAMBAHKAN (kembali ke awal)
+        function sortLatestAdded() {
+            displayedBookings = [...originalBookings]; // Reset ke urutan asli
+            renderTable(displayedBookings);
+        }
+
+        function renderTable(data) {
+            bookingListBody.innerHTML = '';
+            if (!data || data.length === 0) {
+                const row = `<tr><td colspan="8" class="empty-data-cell">Belum ada data booking.</td></tr>`;
+                bookingListBody.innerHTML = row;
+                return;
+            }
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-row-id', item[0]);
+                row.innerHTML = `
+                    <td>${item[1] || ''}</td>
+                    <td>${formatDateToLocal(item[2])}</td>
+                    <td>${item[3] || ''}</td>
+                    <td>${item[4] || ''}</td>
+                    <td>${createStatusBadge(item[5])}</td>
+                    <td>${createStatusBadge(item[6])}</td>
+                    <td>${item[7] || ''}</td>
+                    <td class="actions-cell">
+                        <button class="btn btn-edit" onclick="editRow(this)">Edit</button>
+                        <button class="btn btn-delete" onclick="deleteRow(${item[0]})">Hapus</button>
+                    </td>
+                `;
+                bookingListBody.appendChild(row);
+            });
+        }
+
+        function createStatusBadge(status) {
+            if (!status) return '';
+            let className = '';
+            switch (status) {
+                case 'On Progress': className = 'badge-progress'; break;
+                case 'Done': className = 'badge-done'; break;
+                case 'Cancel': className = 'badge-cancel'; break;
+                case 'Lunas': className = 'badge-paid'; break;
+                case 'DP': className = 'badge-dp'; break;
+                case 'Belum Terbayar': className = 'badge-unpaid'; break;
+            }
+            return `<span class="badge ${className}">${status}</span>`;
+        }
+        
+        function formatDateToLocal(dateString) {
+            if (!dateString) return '-';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function formatDateToISO(localDateString) {
+             if (!localDateString || localDateString === '-') return '';
+            const monthMap = { "januari": "01", "februari": "02", "maret": "03", "april": "04", "mei": "05", "juni": "06", "juli": "07", "agustus": "08", "september": "09", "oktober": "10", "november": "11", "desember": "12" };
+            const parts = localDateString.toLowerCase().split(' ');
+            if (parts.length === 3) {
+                const day = parts[0].padStart(2, '0');
+                const month = monthMap[parts[1]];
+                const year = parts[2];
+                if(day && month && year) {
+                    return `${year}-${month}-${day}`;
+                }
+            }
+            return '';
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            submitButton.disabled = true;
+            submitButton.textContent = 'Menyimpan...';
+
+            const rowId = document.getElementById('rowId').value;
+            const action = rowId ? 'UPDATE' : 'CREATE';
+
+            const body = {
+                action: action,
+                rowId: rowId,
+                nama: document.getElementById('nama').value,
+                tanggalAcara: document.getElementById('tanggalAcara').value,
+                jenisLayanan: document.getElementById('jenisLayanan').value,
+                acara: document.getElementById('acara').value,
+                projectStatus: document.getElementById('projectStatus').value,
+                paymentStatus: document.getElementById('paymentStatus').value,
+                note: document.getElementById('note').value,
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                });
+                
+                const result = await response.json();
+
+                if (result.status === 'SUCCESS') {
+                    alert(result.message);
+                    resetForm();
+                    loadBookings();
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                console.error('Error saat menyimpan:', error);
+                alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
+                resetForm(); // Reset form even on error
+            }
+        }
+
+        function editRow(button) {
+            const row = button.closest('tr');
+            const cells = row.getElementsByTagName('td');
+            
+            document.getElementById('rowId').value = row.dataset.rowId;
+            document.getElementById('nama').value = cells[0].textContent;
+            document.getElementById('tanggalAcara').value = formatDateToISO(cells[1].textContent);
+            document.getElementById('jenisLayanan').value = cells[2].textContent;
+            document.getElementById('acara').value = cells[3].textContent;
+            document.getElementById('projectStatus').value = cells[4].querySelector('.badge').textContent;
+            document.getElementById('paymentStatus').value = cells[5].querySelector('.badge').textContent;
+            document.getElementById('note').value = cells[6].textContent;
+            
+            formTitle.textContent = 'Edit Data Booking';
+            submitButton.textContent = 'Update Booking';
+            document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function deleteRow(rowId) {
+            if (!confirm(`Apakah Anda yakin ingin menghapus data ini? (ID Baris: ${rowId})`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'DELETE', rowId: rowId }),
+                });
+
+                const result = await response.json();
+                if (result.status === 'SUCCESS') {
+                    alert(result.message);
+                    loadBookings();
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                console.error('Error saat menghapus:', error);
+                alert('Terjadi kesalahan saat menghapus data: ' + error.message);
+            }
+        }
+        
+        function resetForm() {
+            form.reset();
+            document.getElementById('rowId').value = '';
+            formTitle.textContent = 'Tambah Booking Baru';
+            submitButton.textContent = 'Simpan Booking';
+            submitButton.disabled = false;
+        }
+    </script>
+</body>
+</html>
