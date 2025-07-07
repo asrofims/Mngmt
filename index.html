@@ -8,23 +8,37 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* === MODERN THEME STYLING === */
+        /* === THEME STYLING & COLOR VARIABLES === */
         :root {
             --primary-color: #4f46e5;
             --secondary-color: #6b7280;
             --success-color: #10b981;
             --danger-color: #ef4444;
             --warning-color: #f59e0b;
-            --light-color: #f9fafb;
-            --dark-color: #111827;
-            --body-bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --border-color: #e5e7eb;
             --font-family: 'Poppins', sans-serif;
             --border-radius: 0.5rem;
             --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+            /* Light Theme */
+            --bg-color: #f3f4f6;
+            --card-bg-color: #ffffff;
+            --text-color: #111827;
+            --text-muted-color: #374151;
+            --border-color: #e5e7eb;
+            --input-bg-color: #f9fafb;
         }
-        
+
+        body.dark-mode {
+            /* Dark Theme */
+            --bg-color: #111827;
+            --card-bg-color: #1f2937;
+            --text-color: #f9fafb;
+            --text-muted-color: #9ca3af;
+            --border-color: #374151;
+            --input-bg-color: #374151;
+        }
+
+        /* === GENERAL STYLING === */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -33,10 +47,11 @@
 
         body {
             font-family: var(--font-family);
-            background-color: var(--body-bg);
-            color: var(--dark-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 20px;
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         h1, h2 {
@@ -44,13 +59,14 @@
         }
 
         h1 {
-            color: var(--dark-color);
+            color: var(--text-color);
             text-align: center;
             margin-bottom: 2.5rem;
             font-size: 2.25rem;
         }
         
         h2 {
+            color: var(--text-color);
             margin-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 0.5rem;
@@ -60,14 +76,31 @@
             max-width: 1200px;
             margin: auto;
         }
+        
+        /* Theme Toggle Button */
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 1.2rem;
+            box-shadow: var(--box-shadow);
+        }
 
         /* Card Styling */
         .card {
-            background-color: var(--card-bg);
+            background-color: var(--card-bg-color);
             padding: 2rem;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             margin-bottom: 2rem;
+            transition: background-color 0.3s;
         }
 
         .form-grid {
@@ -76,30 +109,23 @@
             gap: 1.5rem;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
+        .form-group label {
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #374151;
+            color: var(--text-muted-color);
             font-size: 0.875rem;
         }
 
-        input[type="text"],
-        input[type="date"],
-        select,
-        textarea {
+        input, select, textarea {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid var(--border-color);
-            background-color: var(--light-color);
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
             border-radius: var(--border-radius);
             font-size: 1rem;
             font-family: var(--font-family);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -142,15 +168,15 @@
         .btn-edit { background-color: var(--warning-color); color: var(--dark-color); }
         .btn-delete { background-color: var(--danger-color); color: white; }
         
-        /* Table Styling with Scroll Bar */
+        /* Table Styling */
         .table-container {
-            overflow-x: auto; /* This creates the horizontal scroll bar */
+            overflow-x: auto;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px; /* Minimum width before scrollbar appears */
+            min-width: 800px;
         }
 
         th, td {
@@ -161,16 +187,20 @@
         }
 
         thead th {
-            background-color: var(--light-color);
+            background-color: var(--card-bg-color);
             font-weight: 600;
-            color: #374151;
+            color: var(--text-muted-color);
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 0.05em;
         }
         
         tbody tr:nth-child(even) {
-            background-color: var(--light-color);
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        body.dark-mode tbody tr:nth-child(even) {
+             background-color: rgba(255,255,255,0.05);
         }
         
         .actions-cell {
@@ -188,7 +218,6 @@
             padding: 3rem 1rem !important;
             color: var(--secondary-color);
             font-size: 1.1rem;
-            background-color: var(--light-color) !important;
         }
         
         /* Status Badges */
@@ -196,7 +225,7 @@
             padding: 0.25em 0.75em;
             font-size: 0.8rem;
             font-weight: 500;
-            border-radius: 9999px; /* Pill shape */
+            border-radius: 9999px;
         }
 
         .badge-progress { background-color: #dbeafe; color: #1e40af; }
@@ -218,14 +247,70 @@
         /* Responsive */
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .card { padding: 1.5rem; }
             h1 { font-size: 1.8rem; }
+            .card { padding: 1.5rem; }
+            .theme-switcher { top: 10px; right: 10px; font-size: 1rem;}
             .form-actions { flex-direction: column; }
             .btn { width: 100%; }
+
+            /* === CSS PERBAIKAN UNTUK TABEL MOBILE (START) === */
+            .table-container {
+                overflow-x: hidden; /* Hilangkan scroll horizontal di mobile */
+            }
+
+            table {
+                min-width: 100%;
+                border: 0;
+            }
+
+            table thead {
+                display: none; /* Sembunyikan header tabel asli */
+            }
+
+            table tr {
+                display: block; /* Ubah baris menjadi blok seperti kartu */
+                margin-bottom: 1.5rem;
+                border-radius: var(--border-radius);
+                border: 1px solid var(--border-color);
+                box-shadow: var(--box-shadow);
+                background-color: var(--card-bg-color); /* Beri background pada setiap kartu */
+            }
+             
+            table td {
+                display: flex;
+                justify-content: space-between; /* Sejajarkan label dan isi */
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            table td::before {
+                content: attr(data-label); /* Tampilkan label dari atribut data-label */
+                font-weight: 600;
+                text-align: left;
+                margin-right: 1rem;
+                color: var(--text-muted-color);
+            }
+            
+            table tr td:last-child {
+                border-bottom: 0; /* Hapus border di elemen terakhir */
+            }
+            
+            .actions-cell {
+                justify-content: flex-end;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            .actions-cell::before {
+                display: none; /* Jangan tampilkan label untuk kolom Aksi */
+            }
+             /* === CSS PERBAIKAN UNTUK TABEL MOBILE (END) === */
         }
     </style>
 </head>
 <body>
+    <button id="theme-toggle" class="theme-switcher" title="Toggle dark/light mode">🌙</button>
 
     <div class="container">
         <h1>AFSUNMEDIA BOOKING FORM</h1>
@@ -326,20 +411,42 @@
     </div>
 
     <script>
-        let originalBookings = []; // Menyimpan data asli dari server
-        let displayedBookings = []; // Menyimpan data yang akan ditampilkan & diurutkan
+        let originalBookings = [];
+        let displayedBookings = [];
 
-        // ===================================================================================
-        // PASTE WEB APP URL DARI GOOGLE APPS SCRIPT ANDA DI SINI
-        // ===================================================================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPwL-vov8a1bRrTV3tLr7NGqqFpVLtYNkZdbVPRQ1hZKw9c-1xqJQAHgiZMqzDFqAb/exec';
-        // ===================================================================================
 
         const form = document.getElementById('bookingForm');
         const loader = document.getElementById('loader');
         const bookingListBody = document.getElementById('bookingList');
         const formTitle = document.getElementById('formTitle');
         const submitButton = document.getElementById('submitButton');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        // --- THEME SWITCHER SCRIPT ---
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.body.classList.add(currentTheme);
+            if (currentTheme === 'dark-mode') {
+                 themeToggleBtn.textContent = '☀️';
+            }
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark-mode');
+            themeToggleBtn.textContent = '☀️';
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            let theme = 'light-mode';
+            if (document.body.classList.contains('dark-mode')) {
+                theme = 'dark-mode';
+                themeToggleBtn.textContent = '☀️';
+            } else {
+                 themeToggleBtn.textContent = '🌙';
+            }
+            localStorage.setItem('theme', theme);
+        });
+        // --- END THEME SWITCHER SCRIPT ---
 
         document.addEventListener('DOMContentLoaded', () => {
             if (SCRIPT_URL === 'PASTE_URL_ANDA_DI_SINI') {
@@ -350,7 +457,6 @@
             loadBookings();
             form.addEventListener('submit', handleFormSubmit);
 
-            // Menambahkan event listener untuk setiap tombol sort
             document.getElementById('sortNearestBtn').addEventListener('click', sortNearestDate);
             document.getElementById('sortLatestBtn').addEventListener('click', sortLatestAdded);
         });
@@ -372,10 +478,10 @@
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 
-                originalBookings = data; // Simpan data asli
-                displayedBookings = [...data]; // Buat salinan untuk ditampilkan
+                originalBookings = data; 
+                displayedBookings = [...data];
                 
-                renderTable(displayedBookings); // Render data awal tanpa diurutkan
+                renderTable(displayedBookings);
 
             } catch (error) {
                 console.error('Gagal memuat data:', error);
@@ -385,15 +491,13 @@
             }
         }
         
-        // Fungsi untuk mengurutkan berdasarkan TANGGAL TERDEKAT
         function sortNearestDate() {
             displayedBookings.sort((a, b) => new Date(a[2]) - new Date(b[2]));
             renderTable(displayedBookings);
         }
 
-        // Fungsi untuk mengurutkan berdasarkan TERBARU DITAMBAHKAN (kembali ke awal)
         function sortLatestAdded() {
-            displayedBookings = [...originalBookings]; // Reset ke urutan asli
+            displayedBookings = [...originalBookings];
             renderTable(displayedBookings);
         }
 
@@ -407,14 +511,15 @@
             data.forEach(item => {
                 const row = document.createElement('tr');
                 row.setAttribute('data-row-id', item[0]);
+                // JAVASCRIPT MODIFICATION: Menambahkan atribut 'data-label' untuk setiap sel (td) agar bisa ditata oleh CSS di mobile
                 row.innerHTML = `
-                    <td>${item[1] || ''}</td>
-                    <td>${formatDateToLocal(item[2])}</td>
-                    <td>${item[3] || ''}</td>
-                    <td>${item[4] || ''}</td>
-                    <td>${createStatusBadge(item[5])}</td>
-                    <td>${createStatusBadge(item[6])}</td>
-                    <td>${item[7] || ''}</td>
+                    <td data-label="Nama">${item[1] || ''}</td>
+                    <td data-label="Tanggal Acara">${formatDateToLocal(item[2])}</td>
+                    <td data-label="Layanan">${item[3] || ''}</td>
+                    <td data-label="Acara">${item[4] || ''}</td>
+                    <td data-label="Project">${createStatusBadge(item[5])}</td>
+                    <td data-label="Pembayaran">${createStatusBadge(item[6])}</td>
+                    <td data-label="Note">${item[7] || ''}</td>
                     <td class="actions-cell">
                         <button class="btn btn-edit" onclick="editRow(this)">Edit</button>
                         <button class="btn btn-delete" onclick="deleteRow(${item[0]})">Hapus</button>
@@ -505,22 +610,34 @@
             } catch (error) {
                 console.error('Error saat menyimpan:', error);
                 alert('Terjadi kesalahan saat menyimpan data: ' + error.message);
-                resetForm(); // Reset form even on error
+                resetForm();
             }
         }
 
+        // JAVASCRIPT MODIFICATION: Fungsi 'editRow' diperbarui agar tetap berfungsi di tampilan mobile
         function editRow(button) {
             const row = button.closest('tr');
-            const cells = row.getElementsByTagName('td');
+            const rowId = row.dataset.rowId;
             
-            document.getElementById('rowId').value = row.dataset.rowId;
-            document.getElementById('nama').value = cells[0].textContent;
-            document.getElementById('tanggalAcara').value = formatDateToISO(cells[1].textContent);
-            document.getElementById('jenisLayanan').value = cells[2].textContent;
-            document.getElementById('acara').value = cells[3].textContent;
-            document.getElementById('projectStatus').value = cells[4].querySelector('.badge').textContent;
-            document.getElementById('paymentStatus').value = cells[5].querySelector('.badge').textContent;
-            document.getElementById('note').value = cells[6].textContent;
+            // Cari data asli dari array 'displayedBookings' berdasarkan ID
+            // Ini lebih aman daripada membaca dari tampilan HTML
+            const dataToEdit = displayedBookings.find(item => item[0] == rowId);
+
+            if (!dataToEdit) {
+                alert('Data tidak ditemukan!');
+                return;
+            }
+
+            document.getElementById('rowId').value = dataToEdit[0];
+            document.getElementById('nama').value = dataToEdit[1];
+            // Tanggal dari Google Sheet mungkin perlu diformat ulang ke YYYY-MM-DD
+            const dateFromSheet = new Date(dataToEdit[2]);
+            document.getElementById('tanggalAcara').value = dateFromSheet.toISOString().split('T')[0];
+            document.getElementById('jenisLayanan').value = dataToEdit[3];
+            document.getElementById('acara').value = dataToEdit[4];
+            document.getElementById('projectStatus').value = dataToEdit[5];
+            document.getElementById('paymentStatus').value = dataToEdit[6];
+            document.getElementById('note').value = dataToEdit[7];
             
             formTitle.textContent = 'Edit Data Booking';
             submitButton.textContent = 'Update Booking';
