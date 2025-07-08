@@ -624,8 +624,6 @@
             const row = button.closest('tr');
             const rowId = row.dataset.rowId;
             
-            // Cari data asli dari array 'displayedBookings' berdasarkan ID
-            // Ini lebih aman daripada membaca dari tampilan HTML
             const dataToEdit = displayedBookings.find(item => item[0] == rowId);
 
             if (!dataToEdit) {
@@ -635,9 +633,19 @@
 
             document.getElementById('rowId').value = dataToEdit[0];
             document.getElementById('nama').value = dataToEdit[1];
-            // Tanggal dari Google Sheet mungkin perlu diformat ulang ke YYYY-MM-DD
+            
+            // --- KODE PERBAIKAN DIMULAI DI SINI ---
+            // Mengonversi tanggal dengan mempertimbangkan zona waktu lokal
             const dateFromSheet = new Date(dataToEdit[2]);
-            document.getElementById('tanggalAcara').value = dateFromSheet.toISOString().split('T')[0];
+            const year = dateFromSheet.getFullYear();
+            // getMonth() menghasilkan bulan dari 0-11, jadi tambah 1. padStart untuk format MM (misal: 07)
+            const month = String(dateFromSheet.getMonth() + 1).padStart(2, '0');
+            // padStart untuk format DD (misal: 09)
+            const day = String(dateFromSheet.getDate()).padStart(2, '0');
+            
+            document.getElementById('tanggalAcara').value = `${year}-${month}-${day}`;
+            // --- KODE PERBAIKAN BERAKHIR DI SINI ---
+
             document.getElementById('jenisLayanan').value = dataToEdit[3];
             document.getElementById('acara').value = dataToEdit[4];
             document.getElementById('projectStatus').value = dataToEdit[5];
