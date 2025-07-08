@@ -527,7 +527,7 @@
                     <td data-label="Note">${item[7] || ''}</td>
                     <td class="actions-cell">
                         <button class="btn btn-edit" onclick="editRow(this)">Edit</button>
-                        <button class="btn btn-delete" onclick="deleteRow(${item[0]})">Hapus</button>
+                        <button class="btn btn-delete" onclick="deleteRow('${item[0]}')">Hapus</button>
                     </td>
                 `;
                 bookingListBody.appendChild(row);
