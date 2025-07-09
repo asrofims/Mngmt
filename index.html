@@ -109,6 +109,11 @@
             gap: 1.5rem;
         }
 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
         .form-group label {
             margin-bottom: 0.5rem;
             font-weight: 500;
@@ -168,6 +173,40 @@
         .btn-edit { background-color: var(--warning-color); color: var(--dark-color); }
         .btn-delete { background-color: var(--danger-color); color: white; }
         
+        /* === KODE BARU UNTUK TOOLBAR TABEL (START) === */
+        .table-toolbar {
+            display: flex;
+            flex-wrap: wrap; /* Agar responsif di mobile */
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0; /* Mencegah tombol menyusut */
+        }
+        .search-container {
+            position: relative;
+            flex-grow: 1; /* Membuat bar pencarian mengisi ruang sisa */
+            max-width: 450px; /* Batas lebar maksimum di desktop */
+        }
+        .search-icon {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.1rem;
+            height: 1.1rem;
+            color: var(--text-muted-color);
+            pointer-events: none; /* Agar ikon tidak bisa diklik */
+        }
+        #searchInput {
+            padding-left: 2.5rem; /* Memberi ruang untuk ikon di dalam input */
+        }
+        /* === KODE BARU UNTUK TOOLBAR TABEL (END) === */
+
         /* Table Styling */
         .table-container {
             overflow-x: auto;
@@ -255,13 +294,10 @@
 
             /* === CSS PERBAIKAN UNTUK TABEL MOBILE (START) === */
 
-            /* === KODE YANG DIUBAH (START) === */
             .table-container {
-                /* Menambahkan tinggi maksimum dan scrollbar vertikal pada format kartu */
-                max-height: 500px; /* Anda bisa sesuaikan nilai ini */
+                max-height: 500px;
                 overflow-y: auto;
             }
-            /* === KODE YANG DIUBAH (END) === */
 
             table {
                 min-width: 100%;
@@ -384,15 +420,23 @@
         <div class="card">
             <h2>Daftar Booking</h2>
 
-            <div style="margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                <button id="sortNearestBtn" class="btn btn-secondary" style="font-weight: 500;">
-                    Urutkan: Tanggal Terdekat
-                </button>
-                <button id="sortLatestBtn" class="btn btn-secondary" style="font-weight: 500;">
-                    Urutkan: Terbaru Ditambahkan
-                </button>
+            <div class="table-toolbar">
+                <div class="button-group">
+                    <button id="sortNearestBtn" class="btn btn-secondary" style="font-weight: 500;">
+                        Tanggal Terdekat
+                    </button>
+                    <button id="sortLatestBtn" class="btn btn-secondary" style="font-weight: 500;">
+                        Terbaru Ditambahkan
+                    </button>
+                </div>
+                <div class="search-container">
+                     <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Cari nama, layanan, atau acara...">
+                </div>
             </div>
-
+            
             <div id="loader">Memuat data...</div>
             <div class="table-container">
                 <table id="dataTable">
@@ -409,7 +453,7 @@
                         </tr>
                     </thead>
                     <tbody id="bookingList">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -427,6 +471,7 @@
         const formTitle = document.getElementById('formTitle');
         const submitButton = document.getElementById('submitButton');
         const themeToggleBtn = document.getElementById('theme-toggle');
+        const searchInput = document.getElementById('searchInput');
 
         // --- THEME SWITCHER SCRIPT ---
         const currentTheme = localStorage.getItem('theme');
@@ -464,6 +509,7 @@
 
             document.getElementById('sortNearestBtn').addEventListener('click', sortNearestDate);
             document.getElementById('sortLatestBtn').addEventListener('click', sortLatestAdded);
+            searchInput.addEventListener('input', handleSearch);
         });
 
         function showLoader() {
@@ -503,6 +549,21 @@
 
         function sortLatestAdded() {
             displayedBookings = [...originalBookings];
+            handleSearch();
+        }
+
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase().trim();
+
+            displayedBookings = originalBookings.filter(item => {
+                // Kolom yang dicari: [1]=Nama, [3]=Layanan, [4]=Acara
+                const name = (item[1] || '').toLowerCase();
+                const service = (item[3] || '').toLowerCase();
+                const event = (item[4] || '').toLowerCase();
+                
+                return name.includes(query) || service.includes(query) || event.includes(query);
+            });
+
             renderTable(displayedBookings);
         }
 
@@ -619,7 +680,6 @@
             }
         }
 
-        // JAVASCRIPT MODIFICATION: Fungsi 'editRow' diperbarui agar tetap berfungsi di tampilan mobile
         function editRow(button) {
             const row = button.closest('tr');
             const rowId = row.dataset.rowId;
@@ -634,17 +694,12 @@
             document.getElementById('rowId').value = dataToEdit[0];
             document.getElementById('nama').value = dataToEdit[1];
             
-            // --- KODE PERBAIKAN DIMULAI DI SINI ---
-            // Mengonversi tanggal dengan mempertimbangkan zona waktu lokal
             const dateFromSheet = new Date(dataToEdit[2]);
             const year = dateFromSheet.getFullYear();
-            // getMonth() menghasilkan bulan dari 0-11, jadi tambah 1. padStart untuk format MM (misal: 07)
             const month = String(dateFromSheet.getMonth() + 1).padStart(2, '0');
-            // padStart untuk format DD (misal: 09)
             const day = String(dateFromSheet.getDate()).padStart(2, '0');
             
             document.getElementById('tanggalAcara').value = `${year}-${month}-${day}`;
-            // --- KODE PERBAIKAN BERAKHIR DI SINI ---
 
             document.getElementById('jenisLayanan').value = dataToEdit[3];
             document.getElementById('acara').value = dataToEdit[4];
